@@ -1,4 +1,7 @@
 package suap;
+
+//classe de teste
+
 //para poder funcionar é necessario a biblioteca org.apache.http 
 //baixe neste link: https://hc.apache.org/httpcomponents-client-4.5.x/download.html
 //baixe também o Gson da google: https://github.com/google/gson
@@ -28,6 +31,7 @@ public class MeusDados {
         System.out.println("---------- API SUAP - Java ----------");
         System.out.println("----------------------------------------");
         System.out.println("");
+        
         Scanner sc = new Scanner(System.in);
         //pegando a matricula do aluno
         System.out.println("Digite sua matricula: ");
@@ -57,12 +61,12 @@ public class MeusDados {
             System.out.println("Seu token = " + token);
             System.out.println("-------------------------------------");
         }
-
+       
         //Buscando Meus Dados com GET
         System.out.println("Buscando seus dados na API");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
-            String url = "https://suap.ifrn.edu.br/api/v2/minhas-informacoes/meus-dados/";
+            String url = "https://suap.ifrn.edu.br/api/v2/edu/alunos/"+matricula+"/";
             String auth = "Basic MjAxNDEwNjQwMTAyMjA6RG91cmFkbzEw";//fixo para alunos
 
             HttpGet httpget = new HttpGet(url);
@@ -84,23 +88,23 @@ public class MeusDados {
                         throw new ClientProtocolException("Unexpected response status: " + status);
                     }
                 }
-
             };
             String responseGET = httpclient.execute(httpget, responseHandler);
             Gson gson = new Gson();
             HashMap meusdados = gson.fromJson(responseGET, HashMap.class);
             //tratando o campo vinculo
-            String vinculoS = vinculoToJson(meusdados.get("vinculo").toString());
+            //String vinculoS = vinculoToJson(meusdados.get("vinculo").toString());
             //converte o Json em HashMap
-            HashMap vinculo = gson.fromJson(vinculoS ,
-                              HashMap.class);
-            System.out.println("ID = "+meusdados.get("id"));
-            System.out.println("tipo_vinculo = "+meusdados.get("tipo_vinculo"));
-            System.out.println("Nome completo = "+vinculo.get("nome"));
+            //HashMap vinculo = gson.fromJson(vinculoS ,
+            //                  HashMap.class);
+            System.out.println(meusdados.size());
+            System.out.println("curso = "+meusdados.get("curso"));
+            System.out.println("nome = "+meusdados.get("nome"));
+            /*System.out.println("Nome completo = "+vinculo.get("nome"));
             System.out.println("Matricula = "+vinculo.get("matricula"));
             System.out.println("email = "+meusdados.get("email"));
             System.out.println("Curso = "+vinculo.get("curso"));
-        
+            */
         //tratando exceções
         } catch (IOException io) {
             System.out.println(io.getMessage());
